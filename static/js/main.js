@@ -6,6 +6,7 @@ function taskAllocation() {
         deadline: '',
         loading: false,
         allocation: '',
+        showDISCIntro: false,  // Thêm biến này để kiểm soát hiển thị phần giới thiệu DISC
         allocateTask() {
             if (this.validateInputs()) {
                 this.loading = true;
