@@ -80,7 +80,14 @@ def get_task_allocation(name: str, disc_scores: Dict[str, int], task: str, deadl
     logger.info(f"Đang phân bổ công việc cho {name} với điểm DISC {disc_scores}")
     
     # Tính toán đặc điểm tính cách nổi bật nhất
-    dominant_trait = max(disc_scores, key=disc_scores.get)
+
+    try:
+        dominant_trait = max(disc_scores, key=disc_scores.get)
+    except (TypeError, ValueError):
+        print('Run Exept')
+        disc_scores = {key: int(value) for key, value in disc_scores.items()}
+        dominant_trait = max(disc_scores, key=disc_scores.get)
+
     
     prompt = f"""
     Hãy phân bổ công việc dựa trên điểm tính cách DISC cho:

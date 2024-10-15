@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phân bổ công việc DISC</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-100">
     <div class="max-w-md w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl" x-data="taskAllocation()">
         <div class="p-8">
-            <h1 id="disc-task-allocation" class="text-3xl font-bold mb-6 text-center text-indigo-600">Phân bổ công việc DISC</h1>
-
+            <h1 class="text-3xl font-bold mb-6 text-center text-indigo-600">Phân bổ công việc DISC</h1>
+            
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
-                <input type="text" id="name" x-model="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <input type="text" id="name" x-model="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
             </div>
 
             <div class="mb-4">
@@ -22,40 +22,47 @@
                 <div class="grid grid-cols-2 gap-4 mt-2">
                     <div>
                         <label for="d-score" class="block text-xs text-gray-500">Dominance (D)</label>
-                        <input type="number" id="d-score" x-model.number="discScores.D" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="number" id="d-score" x-model="discScores.D" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
                     <div>
                         <label for="i-score" class="block text-xs text-gray-500">Influence (I)</label>
-                        <input type="number" id="i-score" x-model.number="discScores.I" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="number" id="i-score" x-model="discScores.I" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
                     <div>
                         <label for="s-score" class="block text-xs text-gray-500">Steadiness (S)</label>
-                        <input type="number" id="s-score" x-model.number="discScores.S" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="number" id="s-score" x-model="discScores.S" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
                     <div>
                         <label for="c-score" class="block text-xs text-gray-500">Conscientiousness (C)</label>
-                        <input type="number" id="c-score" x-model.number="discScores.C" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="number" id="c-score" x-model="discScores.C" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
                     </div>
                 </div>
             </div>
 
             <div class="mb-4">
                 <label for="task" class="block text-sm font-medium text-gray-700">Nhiệm vụ</label>
-                <input type="text" id="task" x-model="task" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <textarea id="task" x-model="task" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
             </div>
 
             <div class="mb-6">
                 <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
-                <input type="datetime-local" id="deadline" x-model="deadline" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <input type="datetime-local" id="deadline" x-model="deadline" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
             </div>
 
             <div>
-                <button @click="allocateTask" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button @click="allocateTask" x-show="!loading" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Phân bổ công việc
+                </button>
+                <button x-show="loading" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600" disabled>
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Đang xử lý...
                 </button>
             </div>
 
-            <div id="result" class="mt-8 p-4 bg-gray-50 rounded-md" x-show="allocation" x-cloak>
+            <div class="mt-8 p-4 bg-gray-50 rounded-md" x-show="allocation" x-cloak>
                 <h2 class="text-lg font-semibold mb-2">Kết quả phân bổ công việc:</h2>
                 <pre id="allocation" class="whitespace-pre-wrap text-sm" x-text="allocation"></pre>
             </div>
@@ -66,44 +73,56 @@
         function taskAllocation() {
             return {
                 name: '',
-                discScores: {
-                    D: 0,
-                    I: 0,
-                    S: 0,
-                    C: 0
-                },
+                discScores: { D: 0, I: 0, S: 0, C: 0 },
                 task: '',
                 deadline: '',
+                loading: false,
                 allocation: '',
                 allocateTask() {
-                    const data = {
-                        name: this.name,
-                        discScores: this.discScores,
-                        task: this.task,
-                        deadline: this.deadline
-                    };
-                    console.log('Sending data:', data);
-                    fetch('/allocate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
+                    if (this.validateInputs()) {
+                        this.loading = true;
+                        // Gửi yêu cầu đến server
+                        fetch('/allocate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                name: this.name,
+                                discScores: this.discScores,
+                                task: this.task,
+                                deadline: this.deadline
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.loading = false;
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                this.allocation = data.allocation;
+                            }
+                        })
+                        .catch((error) => {
+                            this.loading = false;
+                            console.error('Error:', error);
+                            alert('Đã xảy ra lỗi khi phân bổ công việc');
+                        });
+                    }
+                },
+                validateInputs() {
+                    if (!this.name || !this.task || !this.deadline) {
+                        alert('Vui lòng điền đầy đủ thông tin');
+                        return false;
+                    }
+                    for (let score in this.discScores) {
+                        let value = parseInt(this.discScores[score]);
+                        if (isNaN(value) || value < 0 || value > 100) {
+                            alert(`Điểm ${score} phải là số từ 0 đến 100`);
+                            return false;
                         }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Received data:', data);
-                        this.allocation = data.allocation;
-                    })
-                    .catch((error) => {
-                        console.error('Lỗi:', error);
-                        this.allocation = 'Đã xảy ra lỗi khi phân bổ công việc. Vui lòng thử lại.';
-                    });
+                    }
+                    return true;
                 }
             }
         }
