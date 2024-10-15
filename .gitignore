@@ -1,0 +1,5 @@
+.env
+chatgpt_interactions.log
+train.log
+__pycache__/
+.venv/

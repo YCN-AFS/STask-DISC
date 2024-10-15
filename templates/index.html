@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân bổ công việc DISC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-md w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl" x-data="taskAllocation()">
+        <div class="p-8">
+            <h1 id="disc-task-allocation" class="text-3xl font-bold mb-6 text-center text-indigo-600">Phân bổ công việc DISC</h1>
+
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
+                <input type="text" id="name" x-model="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Điểm tính cách DISC (0-100)</label>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div>
+                        <label for="d-score" class="block text-xs text-gray-500">Dominance (D)</label>
+                        <input type="number" id="d-score" x-model.number="discScores.D" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="i-score" class="block text-xs text-gray-500">Influence (I)</label>
+                        <input type="number" id="i-score" x-model.number="discScores.I" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="s-score" class="block text-xs text-gray-500">Steadiness (S)</label>
+                        <input type="number" id="s-score" x-model.number="discScores.S" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="c-score" class="block text-xs text-gray-500">Conscientiousness (C)</label>
+                        <input type="number" id="c-score" x-model.number="discScores.C" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="task" class="block text-sm font-medium text-gray-700">Nhiệm vụ</label>
+                <input type="text" id="task" x-model="task" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
+            <div class="mb-6">
+                <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
+                <input type="datetime-local" id="deadline" x-model="deadline" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
+            <div>
+                <button @click="allocateTask" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Phân bổ công việc
+                </button>
+            </div>
+
+            <div id="result" class="mt-8 p-4 bg-gray-50 rounded-md" x-show="allocation" x-cloak>
+                <h2 class="text-lg font-semibold mb-2">Kết quả phân bổ công việc:</h2>
+                <pre id="allocation" class="whitespace-pre-wrap text-sm" x-text="allocation"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function taskAllocation() {
+            return {
+                name: '',
+                discScores: {
+                    D: 0,
+                    I: 0,
+                    S: 0,
+                    C: 0
+                },
+                task: '',
+                deadline: '',
+                allocation: '',
+                allocateTask() {
+                    const data = {
+                        name: this.name,
+                        discScores: this.discScores,
+                        task: this.task,
+                        deadline: this.deadline
+                    };
+                    console.log('Sending data:', data);
+                    fetch('/allocate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Received data:', data);
+                        this.allocation = data.allocation;
+                    })
+                    .catch((error) => {
+                        console.error('Lỗi:', error);
+                        this.allocation = 'Đã xảy ra lỗi khi phân bổ công việc. Vui lòng thử lại.';
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
