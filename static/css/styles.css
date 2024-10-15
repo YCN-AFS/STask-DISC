@@ -1,7 +1,12 @@
-body {
-    background-color: #fcf7fc;
+body{
+    background-color: #4D96FF;
 }
 
-h1 {
-    color: #4c51bf;
-}
+.bg-disc-d { background-color: #FF6B6B; }
+.bg-disc-i { background-color: #FFD93D; }
+.bg-disc-s { background-color: #6BCB77; }
+.bg-disc-c { background-color: #4D96FF; }
+.text-disc-d { color: #FF6B6B; }
+.text-disc-i { color: #FFD93D; }
+.text-disc-s { color: #6BCB77; }
+.text-disc-c { color: #4D96FF; }
