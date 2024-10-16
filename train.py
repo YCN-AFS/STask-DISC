@@ -104,7 +104,7 @@ def get_task_allocation(name: str, disc_scores: Dict[str, int], task: str, deadl
     4. Đề xuất các nguồn lực hoặc công cụ hỗ trợ.
     5. Xác định các thách thức tiềm ẩn và cách khắc phục.
     6. Xác định mức độ ảnh hưởng của thời gian còn lại cho đến deadline.
-    7. Trên thang điểm từ 1 đến 10, đánh giá chính xác khả năng hoàn thành nhiệm vụ.
+    7. Đánh giá chính xác tỉ lệ % khả năng hoàn thành nhiệm vụ.
     """
 
     try:
